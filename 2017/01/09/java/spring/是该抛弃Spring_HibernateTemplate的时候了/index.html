@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>是该抛弃Spring HibernateTemplate的时候了 | 到处抄</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="是该抛弃Spring HibernateTemplate的时候了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="是该抛弃Spring HibernateTemplate的时候了">
+<meta property="og:url" content="http://daochuchao.github.io/2017/01/09/java/spring/是该抛弃Spring_HibernateTemplate的时候了/index.html">
+<meta property="og:site_name" content="到处抄">
+<meta property="og:description" content="是该抛弃Spring HibernateTemplate的时候了">
+<meta property="og:updated_time" content="2017-01-09T14:34:52.368Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="是该抛弃Spring HibernateTemplate的时候了">
+<meta name="twitter:description" content="是该抛弃Spring HibernateTemplate的时候了">
+  
+    <link rel="alternate" href="/atom.xml" title="到处抄" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">到处抄</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://daochuchao.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-java/spring/是该抛弃Spring_HibernateTemplate的时候了" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/01/09/java/spring/是该抛弃Spring_HibernateTemplate的时候了/" class="article-date">
+  <time datetime="2017-01-09T14:26:48.000Z" itemprop="datePublished">2017-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      是该抛弃Spring HibernateTemplate的时候了
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在spring2.0之前，我们在使用hibernate和spring的时候，都会被<code>HibernateTemplate</code>为我们提供benefits（资源和事务管理以及把那个“丑陋”的checked exception转换为runtime exception-DataAccessException ）而折服，在项目中不由自主、不假思索地使用它和那个经典的callback方法。而如今，hibernate3.0.1+ 、spring 2.0+版本以后，我们可以在数据访问层直接使用hinberate的session API(例如<code>SessionFactory.getCurrentSession</code>)，不并担心session和transaction management。至于error handling可以通过spring的@Repository annotation和post processor-PersistenceExceptionTranslationPostProcessor来解决。让我们来看一些代码片段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=&quot;sessionFactory&quot; class=&quot;org.springframework.orm.hibernate3.  </div><div class="line">LocalSessionFactoryBean&quot;&gt;  </div><div class="line">&lt;!-- the properties setting--&gt;  </div><div class="line">&lt;/bean&gt;  </div><div class="line">   </div><div class="line">&lt;bean id=&quot;accountRepo&quot; class=&quot;com.mycompany.HibernateAccountRepository&quot;&gt;  </div><div class="line">    &lt;constructor-arg ref=&quot;sessionFactory&quot;&gt;&lt;/constructor-arg&gt;  </div><div class="line">&lt;/bean&gt;  </div><div class="line">&lt;bean class=&quot;org.springframework.dao.annotation. PersistenceExceptionTranslationPostProcessor&quot;/&gt;</div></pre></td></tr></table></figure></p>
+<p>数据访问层代码片段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@Repository  </div><div class="line">public class HibernateAccountRepository implements AccountRepository &#123;  </div><div class="line">   </div><div class="line">    private SessionFactory factory;  </div><div class="line">   </div><div class="line">    public HibernateAccountRepository(SessionFactory factory) &#123;  </div><div class="line">        this.factory = factory;  </div><div class="line">    &#125;  </div><div class="line">   </div><div class="line">    public Account loadAccount(String username) &#123;  </div><div class="line">        return (Account)factory.getCurrentSession()</div><div class="line">                  .createQuery(&quot;from Account acc where acc.name = :name&quot;)  </div><div class="line">                  .setParameter(&quot;name&quot;, &quot;thethirdpart&quot;).uniqueResult();  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在xml配置文件里面通过配置的post processor会自动检测<code>@Repository</code>标注的bean并为该bean打开exception转换功能。    </p>
+<p>如果不支持annotations，可以通过AOP来实现，更方便<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=&quot;persistenceExceptionInterceptor&quot;  </div><div class="line">class=&quot;org.springframework.dao.support.PersistenceExceptionTranslationInterceptor&quot;/&gt;  </div><div class="line">&lt;aop:config&gt;  </div><div class="line">    &lt;aop:advisor pointcut=&quot;execution(* *..*Repository+.*(..))&quot;  </div><div class="line">                          advice-ref=&quot;persistenceExceptionInterceptor&quot; /&gt;  </div><div class="line">&lt;/aop:config&gt;</div></pre></td></tr></table></figure></p>
+<p>总结，我们应该选择哪种方式呢？还是那句话，根据不同的情况来做最正确的选择。但我建议是丢弃template，而直接使用hibernate的API，毕竟灵活性更大，更何况遇到复杂的情况我们始终得面对hibernate的API。spring并不强制你做任何事情，记得它是一个非侵入性的framework。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://daochuchao.github.io/2017/01/09/java/spring/是该抛弃Spring_HibernateTemplate的时候了/" data-id="cixrp384t00039wqi97rvqkxt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/01/09/java/spring/Spring_MVC事务配置/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Spring MVC事务配置
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/01/09/java/spring/So_should_you_still_use_Spring_s_HibernateTemplate_and_or_JpaTemplate__/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">So should you still use Spring&#39;s HibernateTemplate and/or JpaTemplate??</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jta/">jta</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/spring/">spring</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HibernateTemplate/">HibernateTemplate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/atomikos/">atomikos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hibernate/">hibernate</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jotm/">jotm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jta/">jta</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式事务/">分布式事务</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HibernateTemplate/" style="font-size: 10px;">HibernateTemplate</a> <a href="/tags/atomikos/" style="font-size: 10px;">atomikos</a> <a href="/tags/hibernate/" style="font-size: 10px;">hibernate</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jotm/" style="font-size: 13.33px;">jotm</a> <a href="/tags/jta/" style="font-size: 13.33px;">jta</a> <a href="/tags/spring/" style="font-size: 16.67px;">spring</a> <a href="/tags/分布式事务/" style="font-size: 10px;">分布式事务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/01/09/java/spring/Spring_MVC事务配置/">Spring MVC事务配置</a>
+          </li>
+        
+          <li>
+            <a href="/2017/01/09/java/spring/是该抛弃Spring_HibernateTemplate的时候了/">是该抛弃Spring HibernateTemplate的时候了</a>
+          </li>
+        
+          <li>
+            <a href="/2017/01/09/java/spring/So_should_you_still_use_Spring_s_HibernateTemplate_and_or_JpaTemplate__/">So should you still use Spring&#39;s HibernateTemplate and/or JpaTemplate??</a>
+          </li>
+        
+          <li>
+            <a href="/2017/01/08/java/jta/java分布式事务_JTA_实现 jotm和atomikos/">java分布式事务(JTA)实现 jotm和atomikos</a>
+          </li>
+        
+          <li>
+            <a href="/2017/01/08/java/jta/java分布式事务_spring_JTA_jotm/">java分布式事务:spring+JTA+jotm</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 到处抄<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
