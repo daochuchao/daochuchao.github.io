@@ -96,7 +96,9 @@
         <!-- Table of Contents -->
         
         
+          <a href="http://landing.toutiao.org/redpack/1/?iid=10128997936&app=news_article&utm_campaign=client_share" style="font-size:30px;">快下载安装吧，今天头条送你钱啦！！！！</a><br/>
           <a href="http://www.2345.com/?k69345661" style="font-size:30px;">中国人最喜欢访问的网站</a><br/>
+          <a href="https://common.ofo.so/campaign/17-2-21/login.html?aff=15011761584" style="font-size:30px;">只要注册ofo就送你10块钱，还等什么，快来注册吧</a><br/>
          
         <p>继Gitlab的误删除数据事件没几天，“不沉航母” AWS S3 （Simple Storage Service）几天前也“沉”了4个小时，墙外的半个互联网也跟着挂了。如约，按 AWS 惯例，AWS今天给出了一个简单的故障报告《Summary of the Amazon S3 Service Disruption in the Northern Virginia (US-EAST-1) Region》。这个故障简单来说和Gitlab一样，也是人员误操作。先简单的说一下这份报中说了什么。<br><a id="more"></a></p>
 <h2 id="故障原因"><a href="#故障原因" class="headerlink" title="故障原因"></a>故障原因</h2><p>简单来说，这天，有一个 AWS 工程师在调查 Northern Virginia (US-EAST-1) Region 上 S3 的一个和账务系统相关的问题，这个问题是S3的账务系统变慢了（我估计这个故障在Amazon里可能是Sev2级，Sev2级的故障在Amazon算是比较大的故障，需要很快解决），Oncall的开发工程师（注：Amazon的运维都是由开发工程师来干的，所以Amazon内部嬉称SDE-Software Developer Engineer 为 Someone Do Everything）想移除一个账务系统里的一个子系统下的一些少量的服务器（估计这些服务器上有问题，所以想移掉后重新部署），结果呢，有一条命令搞错了，导致了移除了大量的S3的控制系统。包括两个很重要的子系统：</p>
